@@ -1,0 +1,40 @@
+﻿@model WebApplicationCore1.ViewModels.RegPozViewModel
+
+<h1>Testas</h1>
+
+<form action="SaveChanges" method="post" id="form1">
+    <input type="hidden" name="formId" value="@Model.FormId">
+    <table border="1" cellpadding="5">
+        <thead>
+            <tr>
+                <th>Registracijos požymis</th>
+                <th>Reikšmė</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.FeatureList)
+            {
+                <tr>
+                    <td>@item.FeatureName</td>
+                    <td>
+                        <select name="@item.FeatureId" style="width:150px;">
+                            @foreach (var item2 in item.FeatureClassifier)
+                            {
+                                @if (item.FeatureValue == item2.Id)
+                                {
+                                    <option value="@item2.Id" selected>@item2.Value</option>
+                                }
+                                else
+                                {
+                                    <option value="@item2.Id">@item2.Value</option>
+                                }
+                            }
+                        </select>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</form>
+
+<button type="submit" form="form1" value="Submit">Submit</button>
