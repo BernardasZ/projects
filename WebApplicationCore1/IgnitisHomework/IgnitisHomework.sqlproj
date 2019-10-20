@@ -70,8 +70,6 @@
     <Build Include="dbo\Tables\Classifier.sql" />
     <Build Include="dbo\Tables\Form.sql" />
     <Build Include="dbo\Views\EditableFeatureView.sql" />
-    <Build Include="Security\Username.sql" />
-    <Build Include="Security\RoleMemberships.sql" />
     <Build Include="dbo\Stored Procedures\EditableFeature_GetFeaturesByFormId.sql" />
     <Build Include="dbo\Stored Procedures\Feature_GetFeaturesByFormId.sql" />
     <Build Include="dbo\Stored Procedures\Feature_UpdateClassifierId.sql" />

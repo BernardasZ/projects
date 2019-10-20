@@ -1,40 +1,87 @@
 ﻿@model WebApplicationCore1.ViewModels.RegPozViewModel
+@using Syncfusion.EJ2.Grids
+@using Syncfusion.EJ2
 
-<h1>Testas</h1>
+@*
+    <ejs-grid id="Grid" dataSource="@Model.FeatureList" allowPaging="true" allowFiltering="true" toolbar="@(new List<string>() { "Enable edit", "Update", "Cancel" })">
+        <e-grid-editSettings allowEditing="true"></e-grid-editSettings>
+        <e-grid-pagesettings pageSize="5"></e-grid-pagesettings>
+        <e-grid-columns>
+            <e-grid-column field="FeatureName" headerText="Registracijos požymis" textAlign="Right" width="100"></e-grid-column>
+            <e-grid-column field="FeatureValue" headerText="Reikšmė" width="100"></e-grid-column>
+            <e-grid-column field="FeatureValue" headerText="Drop down" editType="dropdownedit" edit="new {@params = DropDownList }" width="150"></e-grid-column>
+        </e-grid-columns>
+    </ejs-grid>*@
 
-<form action="SaveChanges" method="post" id="form1">
-    <input type="hidden" name="formId" value="@Model.FormId">
-    <table border="1" cellpadding="5">
-        <thead>
-            <tr>
-                <th>Registracijos požymis</th>
-                <th>Reikšmė</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.FeatureList)
-            {
+
+@(Html.EJS().Grid<FeatureViewModel>("FlatGrid")
+                .DataSource(Model.FeatureList)
+                .Columns(col =>
+                {
+                    col.Field("FeatureId").HeaderText("Id").Visible(false).AllowEditing(false).TextAlign(TextAlign.Right).Width(100).Add();
+                    col.Field("FeatureName").HeaderText("Registracijos požymis").AllowEditing(false).TextAlign(TextAlign.Right).Width(100).Add();
+                    col.Field("FeatureValue").HeaderText("Reikšmė").EditType("dropdownedit").Edit(new { @params = new { /*value = "Text",*/ fields = new { /*text = "FeatureValue",*/ value = "FeatureValue" }, dataSource = Model.DropDowns } }).TextAlign(TextAlign.Left).Width(100).Add();
+                })
+                .AllowPaging()
+                .PageSettings(page => page.PageCount(2))
+                .EditSettings(edit => edit.AllowEditing(true).Mode(Syncfusion.EJ2.Grids.EditMode.Batch))
+                .Toolbar(new List<string>() { "Edit", "Update", "Cancel" })
+                .BeforeBatchSave("/Home/Update")
+            .Render())
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@*<h1>Testas</h1>
+
+    <form action="SaveChanges" method="post" id="form1">
+        <input type="hidden" name="formId" value="@Model.FormId">
+        <table border="1" cellpadding="5">
+            <thead>
                 <tr>
-                    <td>@item.FeatureName</td>
-                    <td>
-                        <select name="@item.FeatureId" style="width:150px;">
-                            @foreach (var item2 in item.FeatureClassifier)
-                            {
-                                @if (item.FeatureValue == item2.Id)
-                                {
-                                    <option value="@item2.Id" selected>@item2.Value</option>
-                                }
-                                else
-                                {
-                                    <option value="@item2.Id">@item2.Value</option>
-                                }
-                            }
-                        </select>
-                    </td>
+                    <th>Registracijos požymis</th>
+                    <th>Reikšmė</th>
                 </tr>
-            }
-        </tbody>
-    </table>
-</form>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.FeatureList)
+                {
+                    <tr>
+                        <td>@item.FeatureName</td>
+                        <td>
+                            <select name="@item.FeatureId" style="width:150px;">
+                                @foreach (var item2 in item.FeatureClassifier)
+                                {
+                                    @if (item.FeatureValue == item2.Id)
+                                    {
+                                        <option value="@item2.Id" selected>@item2.Value</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@item2.Id">@item2.Value</option>
+                                    }
+                                }
+                            </select>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </form>
 
-<button type="submit" form="form1" value="Submit">Submit</button>
+    <button type="submit" form="form1" value="Submit">Submit</button>*@

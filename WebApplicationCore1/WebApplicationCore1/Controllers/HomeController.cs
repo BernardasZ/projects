@@ -38,14 +38,18 @@ namespace WebApplicationCore1.Controllers
                         FeatureId = x.Key.FeatureId,
                         FeatureName = x.Key.FeatureName,
                         FeatureValue = x.Key.FeatureClassifierId,
+                        FeatureValueName = x.Where(y => y.ClassifierId == x.Key.FeatureClassifierId).Select(y => y.ClassifierValue).FirstOrDefault(),
                         FeatureClassifier = x.Select(y => new Classifier
                         {
                             ClassifierTypeId = y.ClassifierTypeId,
                             Id = y.ClassifierId,
                             Value = y.ClassifierValue
-                        })
+                        }),
+                        DropDownData = x.Select(y => new { Value = y.ClassifierId, Text = y.ClassifierValue })
                     })
                     .ToList();
+
+                regpoz.DropDowns = _dapperService.SelectList<Classifier, object>("[dbo].[Classifier_GetAll]", null).Select(x => new DropDown { Text = x.Value, FeatureValue = x.Id}).ToList();
             }
 
 			return View(regpoz);
