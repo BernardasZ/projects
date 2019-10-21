@@ -1,0 +1,413 @@
+USE [master]
+GO
+/****** Object:  Database [IgnitisHomework]    Script Date: 2019-10-21 11:25:12 ******/
+CREATE DATABASE [IgnitisHomework]
+ CONTAINMENT = NONE
+ ON  PRIMARY 
+( NAME = N'IgnitisHomework', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL12.MSSQLSERVER\MSSQL\DATA\IgnitisHomework.mdf')
+ LOG ON 
+( NAME = N'IgnitisHomework_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL12.MSSQLSERVER\MSSQL\DATA\IgnitisHomework_log.ldf')
+GO
+ALTER DATABASE [IgnitisHomework] SET COMPATIBILITY_LEVEL = 120
+GO
+IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
+begin
+EXEC [IgnitisHomework].[dbo].[sp_fulltext_database] @action = 'enable'
+end
+GO
+ALTER DATABASE [IgnitisHomework] SET ANSI_NULL_DEFAULT OFF 
+GO
+ALTER DATABASE [IgnitisHomework] SET ANSI_NULLS OFF 
+GO
+ALTER DATABASE [IgnitisHomework] SET ANSI_PADDING OFF 
+GO
+ALTER DATABASE [IgnitisHomework] SET ANSI_WARNINGS OFF 
+GO
+ALTER DATABASE [IgnitisHomework] SET ARITHABORT OFF 
+GO
+ALTER DATABASE [IgnitisHomework] SET AUTO_CLOSE OFF 
+GO
+ALTER DATABASE [IgnitisHomework] SET AUTO_SHRINK OFF 
+GO
+ALTER DATABASE [IgnitisHomework] SET AUTO_UPDATE_STATISTICS ON 
+GO
+ALTER DATABASE [IgnitisHomework] SET CURSOR_CLOSE_ON_COMMIT OFF 
+GO
+ALTER DATABASE [IgnitisHomework] SET CURSOR_DEFAULT  GLOBAL 
+GO
+ALTER DATABASE [IgnitisHomework] SET CONCAT_NULL_YIELDS_NULL OFF 
+GO
+ALTER DATABASE [IgnitisHomework] SET NUMERIC_ROUNDABORT OFF 
+GO
+ALTER DATABASE [IgnitisHomework] SET QUOTED_IDENTIFIER OFF 
+GO
+ALTER DATABASE [IgnitisHomework] SET RECURSIVE_TRIGGERS OFF 
+GO
+ALTER DATABASE [IgnitisHomework] SET  DISABLE_BROKER 
+GO
+ALTER DATABASE [IgnitisHomework] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
+GO
+ALTER DATABASE [IgnitisHomework] SET DATE_CORRELATION_OPTIMIZATION OFF 
+GO
+ALTER DATABASE [IgnitisHomework] SET TRUSTWORTHY OFF 
+GO
+ALTER DATABASE [IgnitisHomework] SET ALLOW_SNAPSHOT_ISOLATION OFF 
+GO
+ALTER DATABASE [IgnitisHomework] SET PARAMETERIZATION SIMPLE 
+GO
+ALTER DATABASE [IgnitisHomework] SET READ_COMMITTED_SNAPSHOT OFF 
+GO
+ALTER DATABASE [IgnitisHomework] SET HONOR_BROKER_PRIORITY OFF 
+GO
+ALTER DATABASE [IgnitisHomework] SET RECOVERY FULL 
+GO
+ALTER DATABASE [IgnitisHomework] SET  MULTI_USER 
+GO
+ALTER DATABASE [IgnitisHomework] SET PAGE_VERIFY CHECKSUM  
+GO
+ALTER DATABASE [IgnitisHomework] SET DB_CHAINING OFF 
+GO
+ALTER DATABASE [IgnitisHomework] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF ) 
+GO
+ALTER DATABASE [IgnitisHomework] SET TARGET_RECOVERY_TIME = 0 SECONDS 
+GO
+ALTER DATABASE [IgnitisHomework] SET DELAYED_DURABILITY = DISABLED 
+GO
+EXEC sys.sp_db_vardecimal_storage_format N'IgnitisHomework', N'ON'
+GO
+USE [IgnitisHomework]
+GO
+/****** Object:  User [payments]    Script Date: 2019-10-21 11:25:12 ******/
+CREATE USER [payments] FOR LOGIN [payments] WITH DEFAULT_SCHEMA=[dbo]
+GO
+/****** Object:  Table [dbo].[Classifier]    Script Date: 2019-10-21 11:25:13 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Classifier](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[ClassifierTypeId] [int] NOT NULL,
+	[Value] [nvarchar](200) NOT NULL,
+ CONSTRAINT [PK_Classifier] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+/****** Object:  Table [dbo].[Feature]    Script Date: 2019-10-21 11:25:13 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Feature](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[FormId] [int] NOT NULL,
+	[ClassifierId] [int] NULL,
+	[Name] [nvarchar](200) NOT NULL,
+ CONSTRAINT [PK_Feature] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+/****** Object:  Table [dbo].[Form]    Script Date: 2019-10-21 11:25:13 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Form](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](200) NOT NULL,
+ CONSTRAINT [PK_Form] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+/****** Object:  View [dbo].[EditableFeatureView]    Script Date: 2019-10-21 11:25:13 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE VIEW [dbo].[EditableFeatureView]
+AS
+SELECT        dbo.Feature.FormId, dbo.Feature.Id AS FeatureId, dbo.Feature.ClassifierId AS FeatureClassifierId, dbo.Feature.Name AS FeatureName, C2.Value AS ClassifierValue, C2.ClassifierTypeId, C2.Id AS ClassifierId
+FROM            dbo.Classifier RIGHT OUTER JOIN
+                         dbo.Feature ON dbo.Classifier.Id = dbo.Feature.ClassifierId INNER JOIN
+                         dbo.Form ON dbo.Feature.FormId = dbo.Form.Id LEFT OUTER JOIN
+                         dbo.Classifier AS C2 ON dbo.Classifier.ClassifierTypeId = C2.ClassifierTypeId
+
+
+GO
+SET IDENTITY_INSERT [dbo].[Classifier] ON 
+
+GO
+INSERT [dbo].[Classifier] ([Id], [ClassifierTypeId], [Value]) VALUES (1, 1, N'Taip')
+GO
+INSERT [dbo].[Classifier] ([Id], [ClassifierTypeId], [Value]) VALUES (2, 1, N'Ne')
+GO
+INSERT [dbo].[Classifier] ([Id], [ClassifierTypeId], [Value]) VALUES (3, 2, N'Metinis rangovas')
+GO
+INSERT [dbo].[Classifier] ([Id], [ClassifierTypeId], [Value]) VALUES (4, 3, N'Automatinis')
+GO
+INSERT [dbo].[Classifier] ([Id], [ClassifierTypeId], [Value]) VALUES (5, 2, N'Mënesinis rangovas')
+GO
+INSERT [dbo].[Classifier] ([Id], [ClassifierTypeId], [Value]) VALUES (6, 3, N'Rankinis')
+GO
+SET IDENTITY_INSERT [dbo].[Classifier] OFF
+GO
+SET IDENTITY_INSERT [dbo].[Feature] ON 
+
+GO
+INSERT [dbo].[Feature] ([Id], [FormId], [ClassifierId], [Name]) VALUES (1, 1, 2, N'Reikia atlikti rangos darbus')
+GO
+INSERT [dbo].[Feature] ([Id], [FormId], [ClassifierId], [Name]) VALUES (2, 1, 3, N'Rangos darbus atliks')
+GO
+INSERT [dbo].[Feature] ([Id], [FormId], [ClassifierId], [Name]) VALUES (4, 1, 1, N'Verslo klientas')
+GO
+INSERT [dbo].[Feature] ([Id], [FormId], [ClassifierId], [Name]) VALUES (5, 1, 5, N'Skaièiavimo metodas')
+GO
+INSERT [dbo].[Feature] ([Id], [FormId], [ClassifierId], [Name]) VALUES (6, 1, NULL, N'Svarbus klientas')
+GO
+SET IDENTITY_INSERT [dbo].[Feature] OFF
+GO
+SET IDENTITY_INSERT [dbo].[Form] ON 
+
+GO
+INSERT [dbo].[Form] ([Id], [Name]) VALUES (1, N'Forma 1')
+GO
+SET IDENTITY_INSERT [dbo].[Form] OFF
+GO
+ALTER TABLE [dbo].[Feature]  WITH CHECK ADD  CONSTRAINT [FK_Feature_Classifier] FOREIGN KEY([ClassifierId])
+REFERENCES [dbo].[Classifier] ([Id])
+GO
+ALTER TABLE [dbo].[Feature] CHECK CONSTRAINT [FK_Feature_Classifier]
+GO
+ALTER TABLE [dbo].[Feature]  WITH CHECK ADD  CONSTRAINT [FK_Feature_Form] FOREIGN KEY([FormId])
+REFERENCES [dbo].[Form] ([Id])
+GO
+ALTER TABLE [dbo].[Feature] CHECK CONSTRAINT [FK_Feature_Form]
+GO
+/****** Object:  StoredProcedure [dbo].[Classifier_GetAll]    Script Date: 2019-10-21 11:25:13 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[Classifier_GetAll]
+AS
+BEGIN
+	SELECT * 
+	FROM [IgnitisHomework].[dbo].[Classifier]
+END
+GO
+/****** Object:  StoredProcedure [dbo].[EditableFeature_GetFeaturesByFormId]    Script Date: 2019-10-21 11:25:13 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[EditableFeature_GetFeaturesByFormId]
+	@formId INT
+AS
+BEGIN
+	SELECT * 
+	FROM [IgnitisHomework].[dbo].[EditableFeatureView] AS V
+	WHERE V.[FormId] = @formId
+	ORDER BY V.[FeatureId]
+END
+GO
+/****** Object:  StoredProcedure [dbo].[Feature_GetFeaturesByFormId]    Script Date: 2019-10-21 11:25:13 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[Feature_GetFeaturesByFormId]
+	@formId INT
+AS
+BEGIN
+	SELECT * 
+	FROM [IgnitisHomework].[dbo].[Feature] AS F
+	WHERE F.[FormId] = @formId
+END
+
+GO
+/****** Object:  StoredProcedure [dbo].[Feature_UpdateClassifierId]    Script Date: 2019-10-21 11:25:13 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[Feature_UpdateClassifierId]
+	@featureId INT,
+	@classifierId INT
+AS
+BEGIN
+	UPDATE [IgnitisHomework].[dbo].[Feature]
+	SET [ClassifierId] = @classifierId
+	WHERE Id = @featureId
+END
+
+
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPane1', @value=N'[0E232FF0-B466-11cf-A24F-00AA00A3EFFF, 1.00]
+Begin DesignProperties = 
+   Begin PaneConfigurations = 
+      Begin PaneConfiguration = 0
+         NumPanes = 4
+         Configuration = "(H (1[30] 4[23] 2[0] 3) )"
+      End
+      Begin PaneConfiguration = 1
+         NumPanes = 3
+         Configuration = "(H (1 [50] 4 [25] 3))"
+      End
+      Begin PaneConfiguration = 2
+         NumPanes = 3
+         Configuration = "(H (1 [50] 2 [25] 3))"
+      End
+      Begin PaneConfiguration = 3
+         NumPanes = 3
+         Configuration = "(H (4 [30] 2 [40] 3))"
+      End
+      Begin PaneConfiguration = 4
+         NumPanes = 2
+         Configuration = "(H (1 [56] 3))"
+      End
+      Begin PaneConfiguration = 5
+         NumPanes = 2
+         Configuration = "(H (2 [66] 3))"
+      End
+      Begin PaneConfiguration = 6
+         NumPanes = 2
+         Configuration = "(H (4 [50] 3))"
+      End
+      Begin PaneConfiguration = 7
+         NumPanes = 1
+         Configuration = "(V (3))"
+      End
+      Begin PaneConfiguration = 8
+         NumPanes = 3
+         Configuration = "(H (1[56] 4[18] 2) )"
+      End
+      Begin PaneConfiguration = 9
+         NumPanes = 2
+         Configuration = "(H (1 [75] 4))"
+      End
+      Begin PaneConfiguration = 10
+         NumPanes = 2
+         Configuration = "(H (1[66] 2) )"
+      End
+      Begin PaneConfiguration = 11
+         NumPanes = 2
+         Configuration = "(H (4 [60] 2))"
+      End
+      Begin PaneConfiguration = 12
+         NumPanes = 1
+         Configuration = "(H (1) )"
+      End
+      Begin PaneConfiguration = 13
+         NumPanes = 1
+         Configuration = "(V (4))"
+      End
+      Begin PaneConfiguration = 14
+         NumPanes = 1
+         Configuration = "(V (2))"
+      End
+      ActivePaneConfig = 0
+   End
+   Begin DiagramPane = 
+      Begin Origin = 
+         Top = -96
+         Left = 0
+      End
+      Begin Tables = 
+         Begin Table = "Classifier"
+            Begin Extent = 
+               Top = 7
+               Left = 58
+               Bottom = 168
+               Right = 230
+            End
+            DisplayFlags = 280
+            TopColumn = 0
+         End
+         Begin Table = "Feature"
+            Begin Extent = 
+               Top = 0
+               Left = 373
+               Bottom = 163
+               Right = 626
+            End
+            DisplayFlags = 280
+            TopColumn = 0
+         End
+         Begin Table = "Form"
+            Begin Extent = 
+               Top = 22
+               Left = 821
+               Bottom = 172
+               Right = 991
+            End
+            DisplayFlags = 280
+            TopColumn = 0
+         End
+         Begin Table = "C2"
+            Begin Extent = 
+               Top = 96
+               Left = 272
+               Bottom = 232
+               Right = 444
+            End
+            DisplayFlags = 280
+            TopColumn = 0
+         End
+      End
+   End
+   Begin SQLPane = 
+   End
+   Begin DataPane = 
+      Begin ParameterDefaults = ""
+      End
+      Begin ColumnWidths = 9
+         Width = 284
+         Width = 1500
+         Width = 1485
+         Width = 2070
+         Width = 3135
+         Width = 2820
+         Width = 2715
+         Width = 1500
+         Width = 1500
+      End
+   End
+   Begin CriteriaPane = 
+      Begin ColumnWidths = 11
+         Column = 1935
+         Alias = 3060
+         Table = 1170
+         Output = 720
+         Append = 1400
+         NewValue = 1170
+         SortType = 1350
+         SortOrder = 1410
+         GroupBy = 1350
+         Filter = 1350
+         Or = 1350
+         Or = 1350
+         Or = 1350
+      End
+   End' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'EditableFeatureView'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPane2', @value=N'
+End
+' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'EditableFeatureView'
+GO
+EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPaneCount', @value=2 , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'EditableFeatureView'
+GO
+USE [master]
+GO
+ALTER DATABASE [IgnitisHomework] SET  READ_WRITE 
+GO
