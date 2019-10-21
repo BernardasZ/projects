@@ -2,6 +2,15 @@
 @using Syncfusion.EJ2.Grids
 @using Syncfusion.EJ2
 
+
+@*
+	
+	DOES NOT WORK CAUSE OF BAD SYCFUSION DROPDOWN, COULD NOT FINISH FULL FUNCIONALITY :(   
+
+	EJS().Grid is functional, but not finished. There are two examples of the same grid.
+	
+*@
+
 @*
     <ejs-grid id="Grid" dataSource="@Model.FeatureList" allowPaging="true" allowFiltering="true" toolbar="@(new List<string>() { "Enable edit", "Update", "Cancel" })">
         <e-grid-editSettings allowEditing="true"></e-grid-editSettings>
@@ -26,28 +35,10 @@
                 .PageSettings(page => page.PageCount(2))
                 .EditSettings(edit => edit.AllowEditing(true).Mode(Syncfusion.EJ2.Grids.EditMode.Batch))
                 .Toolbar(new List<string>() { "Edit", "Update", "Cancel" })
-                .BeforeBatchSave("/Home/Update")
             .Render())
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-@*<h1>Testas</h1>
+<h1>Homework</h1>
 
     <form action="SaveChanges" method="post" id="form1">
         <input type="hidden" name="formId" value="@Model.FormId">
@@ -84,4 +75,4 @@
         </table>
     </form>
 
-    <button type="submit" form="form1" value="Submit">Submit</button>*@
+    <button type="submit" form="form1" value="Submit">Submit</button>

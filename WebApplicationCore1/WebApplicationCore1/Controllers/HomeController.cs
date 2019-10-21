@@ -21,31 +21,32 @@ namespace WebApplicationCore1.Controllers
         }
 
         [Route("RegPoz")]
-        public IActionResult RegPoz(/*[FromQuery] int regid*/)
+        public IActionResult RegPoz([FromQuery] int? regid)
         {
-            int regid = 1;
+			if (regid == null)
+			{
+				return NotFound();
+			}
 
-
-            var regpoz = new RegPozViewModel() { FormId = regid };
+            var regpoz = new RegPozViewModel() { FormId = regid.Value };
 
             var data = _dapperService.SelectList<EditableFeatureView, object>("[dbo].[EditableFeature_GetFeaturesByFormId]", new { formId = regid });
 
             if (data != null && data.Count() > 0)
             {
+				//Selectin whole view from DB to able to extract classifier values as seperate lists for each feature
                 regpoz.FeatureList = data.GroupBy(x => new { x.FormId, x.FeatureId, x.FeatureName, x.FeatureClassifierId })
                     .Select(x => new FeatureViewModel
                     {
                         FeatureId = x.Key.FeatureId,
                         FeatureName = x.Key.FeatureName,
                         FeatureValue = x.Key.FeatureClassifierId,
-                        FeatureValueName = x.Where(y => y.ClassifierId == x.Key.FeatureClassifierId).Select(y => y.ClassifierValue).FirstOrDefault(),
-                        FeatureClassifier = x.Select(y => new Classifier
+                        FeatureClassifier = x.Select(y => new Classifier // should be mai classifier, but don't work with Syncfusion Grid
                         {
                             ClassifierTypeId = y.ClassifierTypeId,
                             Id = y.ClassifierId,
                             Value = y.ClassifierValue
-                        }),
-                        DropDownData = x.Select(y => new { Value = y.ClassifierId, Text = y.ClassifierValue })
+                        })
                     })
                     .ToList();
 
@@ -72,7 +73,6 @@ namespace WebApplicationCore1.Controllers
 
         //        if (listFeatures != null)
         //        {
-
         //            foreach (var item in collection)
         //            {
         //                if (!string.IsNullOrWhiteSpace(item.Value) && item.Key != "formId")
@@ -92,8 +92,6 @@ namespace WebApplicationCore1.Controllers
         //    return Redirect("RegPoz");
         //}
 
-
-
         [HttpPost]
         [Route("SaveChanges")]
         public IActionResult SaveChanges(IFormCollection collection)
@@ -104,14 +102,12 @@ namespace WebApplicationCore1.Controllers
                 {
                     if (!string.IsNullOrWhiteSpace(item.Value) && item.Key != "formId")
                     {
-                        _dapperService.Update<Feature, object>(
-                            "[dbo].[Feature_UpdateClassifierId]", 
-                            new { featureId = int.Parse(item.Key), classifierId = int.Parse(item.Value) });
+                        _dapperService.Update<Feature, object>("[dbo].[Feature_UpdateClassifierId]", new { featureId = int.Parse(item.Key), classifierId = int.Parse(item.Value) });
                     }
                 }
             }
 
-            return Redirect("RegPoz");
+            return Redirect("RegPoz?regid=1");
         }
     }
 }

@@ -13,9 +13,9 @@ namespace WebApplicationCore1.ViewModels
         public List<DropDown> DropDowns { get; set; } = new List<DropDown>();
     }
 
-    public class DropDown
-    {
-        public int? FeatureValue { get; set; }
-        public string Text { get; set; }
-    }
+	public class DropDown
+	{
+		public int? FeatureValue { get; set; }
+		public string Text { get; set; }
+	}
 }
