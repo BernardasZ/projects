@@ -28,13 +28,39 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Text = "Form1";
+            this.treeView1 = new System.Windows.Forms.TreeView();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            // 
+            // treeView1
+            // 
+            this.treeView1.Dock = System.Windows.Forms.DockStyle.Left;
+            this.treeView1.Location = new System.Drawing.Point(0, 0);
+            this.treeView1.Name = "treeView1";
+            this.treeView1.Size = new System.Drawing.Size(300, 761);
+            this.treeView1.TabIndex = 0;
+            // 
+            // richTextBox1
+            // 
+            this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.richTextBox1.Location = new System.Drawing.Point(300, 0);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.Size = new System.Drawing.Size(884, 761);
+            this.richTextBox1.TabIndex = 1;
+            this.richTextBox1.Text = "";
+            // 
+            // Form1
+            // 
+            this.ClientSize = new System.Drawing.Size(1184, 761);
+            this.Controls.Add(this.richTextBox1);
+            this.Controls.Add(this.treeView1);
+            this.Name = "Form1";
+
         }
 
         #endregion
+
+        private System.Windows.Forms.TreeView treeView1;
+        private System.Windows.Forms.RichTextBox richTextBox1;
     }
 }
 
