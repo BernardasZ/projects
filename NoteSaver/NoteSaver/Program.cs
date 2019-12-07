@@ -1,7 +1,9 @@
+﻿using Autofac;
+using Autofac.Core;
+using Autofac.Extras.CommonServiceLocator;
+using CommonServiceLocator;
+using NoteSaver.Autofac;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace NoteSaver
@@ -9,15 +11,20 @@ namespace NoteSaver
     static class Program
     {
         /// <summary>
-        ///  The main entry point for the application.
+        /// The main entry point for the application.
         /// </summary>
         [STAThread]
         static void Main()
         {
-            Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+
+            var builder = new ContainerBuilder();
+            builder.RegisterModule(new Services());
+            var container = builder.Build();
+            ServiceLocator.SetLocatorProvider(() => new AutofacServiceLocator(container));
+
+            Application.Run(ServiceLocator.Current.GetInstance<Form1>());
         }
     }
 }
