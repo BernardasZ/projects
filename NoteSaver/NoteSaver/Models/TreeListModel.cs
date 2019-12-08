@@ -9,6 +9,7 @@ namespace NoteSaver.Models
 {
     public class TreeListModel : ParagraphTreeList
     {
+        public bool IsNew { get; set; } = false;
         public virtual List<TreeListModel> TreeList { get; set; }
     }
 }

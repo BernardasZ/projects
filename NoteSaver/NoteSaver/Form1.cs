@@ -1,20 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
+﻿using NoteSaver.Services;
+using System;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace NoteSaver
 {
     public partial class Form1 : Form
     {
-        public Form1()
+        private readonly IConstructTreeList _constructTreeList;
+        public Form1(IConstructTreeList constructTreeList)
         {
+            this._constructTreeList = constructTreeList;
+
             InitializeComponent();
         }
 
@@ -40,7 +37,7 @@ namespace NoteSaver
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            var treeList =_constructTreeList.Construct();
         }
     }
 }

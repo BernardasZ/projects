@@ -1,8 +1,6 @@
 ﻿using Autofac;
-using Autofac.Core;
 using Autofac.Extras.CommonServiceLocator;
 using CommonServiceLocator;
-using NoteSaver.Autofac;
 using System;
 using System.Windows.Forms;
 
@@ -20,7 +18,7 @@ namespace NoteSaver
             Application.SetCompatibleTextRenderingDefault(false);
 
             var builder = new ContainerBuilder();
-            builder.RegisterModule(new Services());
+            builder.RegisterModule(new NoteSaver.Autofac.Services());
             var container = builder.Build();
             ServiceLocator.SetLocatorProvider(() => new AutofacServiceLocator(container));
 

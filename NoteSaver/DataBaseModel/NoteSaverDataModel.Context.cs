@@ -15,14 +15,13 @@ namespace DataBaseModel
     
     public partial class NoteSaverEntities : DbContext
     {
-        public NoteSaverEntities()
-            : base("name=NoteSaverEntities")
+        public NoteSaverEntities() : base("name=NoteSaverEntities")
         {
         }
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            throw new UnintentionalCodeFirstException();
+            //throw new UnintentionalCodeFirstException();
         }
     
         public virtual DbSet<ParagraphTreeList> ParagraphTreeList { get; set; }
