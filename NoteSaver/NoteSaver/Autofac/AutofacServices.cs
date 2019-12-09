@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace NoteSaver.Autofac
 {
-    public class Services : Module
+    public class AutofacServices : Module
     {
         protected override void Load(ContainerBuilder builder)
         {

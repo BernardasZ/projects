@@ -30,7 +30,7 @@ namespace NoteSaver.Services.Concrete
         {
             try
             {
-                CheckTreeForChanges(list);
+                //CheckTreeForChanges(list);
             }
             catch (Exception ex)
             {
