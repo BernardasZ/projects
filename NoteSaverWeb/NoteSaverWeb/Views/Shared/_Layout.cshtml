@@ -6,6 +6,7 @@
     <title>@ViewData["Title"] - Note Saver</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/ContainerForContent.css" />
 </head>
 <body>
     <header>
@@ -31,7 +32,18 @@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
-            @RenderBody()
+            <section class="content">
+                <nav>
+                    <ul class="content">
+                        <li><a href="#">London</a></li>
+                        <li><a href="#">Paris</a></li>
+                        <li><a href="#">Tokyo</a></li>
+                    </ul>
+                </nav>
+                <article class="content">
+                    @RenderBody()
+                </article>
+            </section>
         </main>
     </div>
 
@@ -43,6 +55,31 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="ckeditor5-build-decoupled-document/ckeditor.js"></script>
+
+    <script>
+        DecoupledEditor
+            .create(document.querySelector('#editor'), {
+                // toolbar: [ 'heading', '|', 'bold', 'italic', 'link' ]
+            })
+            .then(editor => {
+                const toolbarContainer = document.querySelector('main .toolbar-container');
+
+                toolbarContainer.prepend(editor.ui.view.toolbar.element);
+
+                window.editor = editor;
+                editor.setData(document.getElementById('Model.Content').value);
+            })
+            .catch(err => {
+                console.error(err.stack);
+            });
+
+        function updateContent()
+        {
+            document.getElementById('Model.Content').value = editor.getData();
+        }
+    </script>
+
     @RenderSection("Scripts", required: false)
 </body>
 </html>

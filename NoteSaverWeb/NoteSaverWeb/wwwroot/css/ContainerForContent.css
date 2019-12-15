@@ -1,0 +1,25 @@
+﻿nav .content {
+    float: left;
+    width: 20%;
+    background: #F8F9F9;
+    padding: 20px;
+}
+
+/* Style the list inside the menu */
+nav ul .content {
+    list-style-type: none;
+    padding: 0;
+}
+
+article .content {
+    float: left;
+    padding: 20px;
+    width: 80%;
+}
+
+/* Clear floats after the columns */
+section:after .content {
+    content: "";
+    display: table;
+    height: 100%;
+}

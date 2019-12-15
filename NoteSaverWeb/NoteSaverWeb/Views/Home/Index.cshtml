@@ -1,8 +1,21 @@
-﻿@{
+﻿@model EditorViewModel
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@using (Html.BeginForm("Index", "Home", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="document-editor">
+        <div class="toolbar-container"></div>
+        <div class="content-container">
+            <div id="editor">
+            </div>
+        </div>
+    </div>
+
+    @Html.TextBoxFor(model => model.Content, new { @id = "Model.Content", @hidden = "hidden" })
+
+    <input type="submit" name="submit" value="Save" onclick="updateContent()"/>
+}
